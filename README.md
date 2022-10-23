@@ -1,4 +1,4 @@
-# Ejemplo de API REST
+# DESARROLLO
 
 Demostración para **Python 3** de API REST creando un servidor con Flask y un cliente con requests.
 
