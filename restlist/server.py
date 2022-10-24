@@ -68,3 +68,5 @@ def routeApp(app, LIST):
             return make_response('Missing "element" key', 400)
         element = request.get_json()['element']
         return make_response(f"{LIST.count(element)}", 200)
+
+
