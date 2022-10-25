@@ -9,10 +9,12 @@ from flask import Flask
 from rest_auth.server import routeApp
 from rest_auth.auth import Auth
 
+PATH = 'test.db'
+
 def main():
     '''Entry point'''
     app = Flask("rest_auth")
-    routeApp(app, Auth())
+    routeApp(app, Auth(PATH))
     app.run(debug=True)
 
 
