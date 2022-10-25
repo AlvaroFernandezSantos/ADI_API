@@ -5,14 +5,14 @@
 from setuptools import setup
 
 setup(
-    name='restlist',
+    name='rest_auth',
     version='0.1',
     description=__doc__,
-    packages=['restlist', 'restlist_scripts'],
+    packages=['rest_auth', 'rest_auth_scripts'],
     entry_points={
         'console_scripts': [
-            'restlist_server=restlist_scripts.server:main',
-            'restlist_client=restlist_scripts.client:main'
+            'rest_auth_server=rest_auth_scripts.server:main',
+            'rest_auth_client=rest_auth_scripts.client:main'
         ]
     }
 )
