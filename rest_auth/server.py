@@ -17,6 +17,8 @@ def routeApp(app, AUTH, tokens, admin_token):
             return make_response('Missing "hash-pass" key', 400)
         username = request.get_json()['username']
         password = request.get_json()['password']
+        if not AUTH.exists(username):
+            return make_response('User does not exist', 400)
         new_token = tokens.create_token(username, password)
         respuesta = {"user": username, "token": new_token}
         return make_response(json.dumps(respuesta), 200)
@@ -69,7 +71,6 @@ def routeApp(app, AUTH, tokens, admin_token):
             return make_response('Missing admin-token', 401)
 
         if not AUTH.exists(username):
-            AUTH.delete_user(username)
             return make_response("User not found", 404)
 
         AUTH.delete_user(username)
@@ -78,10 +79,7 @@ def routeApp(app, AUTH, tokens, admin_token):
     
     @app.route('/v1/token/token', methods=['GET'])
     def token_exists(token):
-        ''' Comprobar si un token existe '''
-        if not request.headers.get('admin-token'):
-            return make_response('Missing admin-token', 401)
-            
+        ''' Comprobar si un token existe '''            
         if tokens.exists(token):
             response = {"user": tokens.get_user(token)}
             return make_response(json.dumps(response), 200)

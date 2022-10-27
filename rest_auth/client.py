@@ -32,7 +32,7 @@ class RestAuthClient:
             raise ValueError('username must be a string')
         req_body = {'username': username}
         result = requests.put(
-            f'{self.root}v1/users',
+            f'{self.root}v1/user',
             headers=HEADERS,
             data=json.dumps(req_body),
             timeout=self.timeout
@@ -47,7 +47,7 @@ class RestAuthClient:
             raise ValueError('username must be a string')
         req_body = {'username': username}
         result = requests.delete(
-            f'{self.root}v1/users',
+            f'{self.root}v1/user',
             headers=HEADERS,
             data=json.dumps(req_body),
             timeout=self.timeout
@@ -99,7 +99,7 @@ class RestAuthClient:
             raise ValueError('username must be a string')
         req_body = {'username': username}
         result = requests.post(
-            f'{self.root}v1/users/{username}',
+            f'{self.root}v1/user/{username}',
             headers=HEADERS,
             data=json.dumps(req_body),
             timeout=self.timeout
