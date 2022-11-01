@@ -35,7 +35,7 @@ class Auth:
         '''Elimina un usuario'''
         db = self.get_db()
         cursor = self.get_cursor()
-        cursor.execute(f'DELETE FROM users WHERE username = "{username}"')
+        cursor.execute(f'DELETE FROM users WHERE username="{username}"')
         db.commit()
 
 
@@ -43,7 +43,7 @@ class Auth:
         '''Establece la contraseña de un usuario'''
         db = self.get_db()
         cursor = self.get_cursor()
-        cursor.execute(f'UPDATE users SET password = "{password}" WHERE username = "{username}"')
+        cursor.execute(f'UPDATE users SET password="{password}" WHERE username="{username}"')
         db.commit()
 
     
