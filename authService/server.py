@@ -15,8 +15,8 @@ def routeApp(app, AUTH, tokens, admin_token):
             return make_response('Missing "user" key', 400)
         if 'hash-pass' not in request.get_json():
             return make_response('Missing "hash-pass" key', 400)
-        username = request.get_json()['username']
-        password = request.get_json()['password']
+        username = request.get_json()['user']
+        password = request.get_json()['hash-pass']
         if not AUTH.exists(username):
             return make_response('User does not exist', 400)
         new_token = tokens.create_token(username, password)
@@ -34,7 +34,7 @@ def routeApp(app, AUTH, tokens, admin_token):
             return make_response('Missing JSON', 400)
         if 'hash-pass' not in request.get_json():
             return make_response('Missing "hash-pass" key', 400)
-        password = request.get_json()['password']
+        password = request.get_json()['hash-pass']
         AUTH.create_user(username, password)
         response = {"user": username}
         return make_response(json.dumps(response), 200)
@@ -50,14 +50,14 @@ def routeApp(app, AUTH, tokens, admin_token):
             return make_response('Missing JSON', 400)
         if 'hash-pass' not in request.get_json():
             return make_response('Missing "hash-pass" key', 400)
-        password = request.get_json()['password']
-        AUTH.change_password(username, password)
+        password = request.get_json()['hash-pass']
+        AUTH.set_password(username, password)
         response = {"user": username}
         return make_response(json.dumps(response), 200)
 
     
     @app.route('/v1/user/<username>', methods=['GET'])
-    def exists(username):
+    def user_exists(username):
         ''' Comprobar si un usuario existe '''
         if AUTH.exists(username):
             return make_response("", 204)

@@ -1,0 +1,16 @@
+LICENSE
+README.md
+setup.py
+authService/__init__.py
+authService/auth.py
+authService/client.py
+authService/non_persistent_auth.py
+authService/server.py
+authService.egg-info/PKG-INFO
+authService.egg-info/SOURCES.txt
+authService.egg-info/dependency_links.txt
+authService.egg-info/entry_points.txt
+authService.egg-info/top_level.txt
+authService_scripts/__init__.py
+authService_scripts/client.py
+authService_scripts/server.py

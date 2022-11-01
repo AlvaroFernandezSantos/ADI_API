@@ -2,20 +2,20 @@
 
 import unittest
 
-import rest_auth.auth
+import authService.auth
 
 PATH = 'test.db'
 
-class TestAuthImplementation(unittest.TestCase):
+class AuthServiceImplementation(unittest.TestCase):
 
     def test_creation(self):
         '''Test instantiation'''
-        auth = rest_auth.auth.Auth(PATH)
+        auth = authService.auth.Auth(PATH)
         self.assertEqual(auth.len(), 0)
 
     def test_create_user(self):
         '''Test create user'''
-        auth = rest_auth.auth.Auth(PATH)
+        auth = authService.auth.Auth(PATH)
         auth.create_user('user1')
         self.assertEqual(auth.len(), 1)
         self.assertTrue(auth.exists('user1'))
@@ -23,7 +23,7 @@ class TestAuthImplementation(unittest.TestCase):
     def test_delete_user(self):
         '''Test delete user'''
         USER2 = 'user2'
-        auth = rest_auth.auth.Auth(PATH)
+        auth = authService.auth.Auth(PATH)
         auth.create_user(USER2)
         self.assertEqual(auth.len(), 1)
         self.assertTrue(auth.exists(USER2))
@@ -34,7 +34,7 @@ class TestAuthImplementation(unittest.TestCase):
     def test_set_password(self):
         '''Test set password'''
         USER3 = 'user3'
-        auth = rest_auth.auth.Auth(PATH)
+        auth = authService.auth.Auth(PATH)
         auth.create_user(USER3)
         self.assertEqual(auth.len(), 1)
         self.assertTrue(auth.exists(USER3))
@@ -44,7 +44,7 @@ class TestAuthImplementation(unittest.TestCase):
     def test_check_password(self):
         '''Test check password'''
         USER4 = 'user4'
-        auth = rest_auth.auth.Auth(PATH)
+        auth = authService.auth.Auth(PATH)
         auth.create_user(USER4)
         self.assertEqual(auth.len(), 1)
         self.assertTrue(auth.exists(USER4))
@@ -55,7 +55,7 @@ class TestAuthImplementation(unittest.TestCase):
     def test_exists(self):
         '''Test exists'''
         USER5 = 'user5'
-        auth = rest_auth.auth.Auth(PATH)
+        auth = authService.auth.Auth(PATH)
         auth.create_user(USER5)
         self.assertEqual(auth.len(), 1)
         self.assertTrue(auth.exists(USER5))

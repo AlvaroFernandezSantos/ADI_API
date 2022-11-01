@@ -4,7 +4,7 @@
     REST access library + client example
 '''
 
-from rest_auth.client import RestAuthClient
+from authService.client import RestAuthClient
 
 def main():
     '''Entry point'''
