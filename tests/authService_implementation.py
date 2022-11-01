@@ -36,7 +36,6 @@ class AuthServiceImplementation(unittest.TestCase):
         auth = authService.auth.Auth(PATH)
         auth.create_user(USER3, PASSWORD3)
         self.assertTrue(auth.exists(USER3))
-        self.assertTrue(auth.check_password(USER3, PASSWORD3))
         auth.set_password(USER3, 'password')
         self.assertTrue(auth.check_password(USER3, 'password'))
 
@@ -47,8 +46,8 @@ class AuthServiceImplementation(unittest.TestCase):
         auth = authService.auth.Auth(PATH)
         auth.create_user(USER4, PASSWORD4)
         self.assertTrue(auth.exists(USER4))
-        auth.set_password(USER4, PASSWORD4)
-        self.assertTrue(auth.check_password(USER4, PASSWORD4))
+        auth.set_password(USER4, 'password')
+        self.assertTrue(auth.check_password(USER4, 'password'))
         self.assertFalse(auth.check_password(USER4, 'wrong_password'))
 
     def test_exists(self):

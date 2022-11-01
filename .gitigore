@@ -2,3 +2,4 @@
 .venv
 authService.egg-info
 build
+.coverage
