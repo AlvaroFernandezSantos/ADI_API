@@ -24,7 +24,6 @@ class NonPersistentAuth:
             timer = threading.Timer(5, self.incrementa_edad, [token])
             timer.start()
             return token
-        return None
 
 
     def is_valid(self, username, token):
@@ -55,9 +54,7 @@ class NonPersistentAuth:
         ''' Elimina un token '''
         for user, values in self.users.items():
             if values.get("token") == token:
-                del self.users[user]
-                return True
-        return False
+                self.users.pop(user)
 
 
     def reset_edad(self, token):
@@ -65,6 +62,4 @@ class NonPersistentAuth:
         for user, values in self.users.items():
             if values.get("token") == token:
                 self.users[user]["edad"] = 0
-                return True
-        return False
             

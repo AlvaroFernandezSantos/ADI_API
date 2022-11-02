@@ -33,10 +33,10 @@ class Administrator:
             raise ValueError('Password must be a string')
         req_body = {'user': username, "hash-pass": password}
         result = requests.put(
-            f'{self.url}v1/user',
+            f'{self.url}v1/user/{username}',
             headers=self.headers,
             data=json.dumps(req_body),
-            timeout=self.timeout)
+            timeout=120)
         if result.status_code != 200:
             raise AuthServiceError(f'Unexpected status code: {result.status_code}')
 
@@ -45,21 +45,20 @@ class Administrator:
             raise ValueError('Username must be a string')
         req_body = {'username': username}
         result = requests.delete(
-            f'{self.url}v1/user',
+            f'{self.url}v1/user/{username}',
             headers=self.headers,
             data=json.dumps(req_body),
-            timeout=self.timeout
-        )
-        if result.status_code != 200:
+            timeout=120)
+        if result.status_code != 204:
             raise AuthServiceError(f'Unexpected status code: {result.status_code}')    
 
 
 class User:
     '''  Cliente de autenticación como usuario '''
 
-    def __init__(self, url,  username, token):
+    def __init__(self, url, username, token):
         self.url = url
-        self.__username = username
+        self.username = username
         self.__token = token
         self.__headers = {'Content-Type': 'application/json', 'user-token': self.__token}
 
@@ -82,7 +81,7 @@ class User:
             f'{self.url}v1/user/{self.username}',
             headers=self.headers,
             data=json.dumps(req_body),
-            timeout=self.timeout)
+            timeout=120)
         if result.status_code != 200:
             raise AuthServiceError(f'Unexpected status code: {result.status_code}')
 

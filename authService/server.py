@@ -43,9 +43,13 @@ def routeApp(app, AUTH, tokens, admin_token):
     @app.route('/v1/user/<username>', methods=['POST'])
     def change_password(username):
         ''' Cambiar contraseña de un usuario '''
-        if not request.headers.get('admin-token') or request.headers.get('admin-token') != admin_token:
-            return make_response('Missing admin-token', 401)
+        # if not request.headers.get('admin-token') or request.headers.get('admin-token') != admin_token:
+        #     return make_response('Missing admin-token', 401)
 
+        # Comprobar que el token pertenece al usuario
+        if not request.headers.get('user-token') or not tokens.check_token(username, request.headers.get('user-token')):
+            return make_response('Missing user-token', 401)
+            
         if not request.is_json:
             return make_response('Missing JSON', 400)
         if 'hash-pass' not in request.get_json():
