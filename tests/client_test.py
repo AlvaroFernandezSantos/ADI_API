@@ -53,3 +53,44 @@ class UserImplementation(unittest.TestCase):
         # El usuario necesita hacer login para conseguir su token -> Sino no tiene permiso para cambiarse la contraseña
         user.set_new_password('password')
         self.assertTrue(auth.check_password(USER3, 'password'))
+
+class AuthServiceImplementation(unittest.TestCase):
+
+    def test_creation(self):
+        '''Test instantiation'''
+        auth = authService.client.AuthService(URL)
+        self.assertEqual(auth.uri, URL)
+
+    def test_user_of_token(self):
+        '''Test user of token'''
+        USER4 = 'user4'
+        PASSWORD4 = 'password4'
+        auth = authService.client.AuthService(URL)
+        admin = authService.client.Administrator(URL, TOKEN)
+        admin.new_user(USER4, PASSWORD4)
+        token = auth.login(USER4, PASSWORD4)
+        self.assertEqual(auth.user_of_token(token), USER4)
+
+    def test_exists_user(self):
+        '''Test exists user'''
+        USER5 = 'user5'
+        PASSWORD5 = 'password5'
+        auth = authService.client.AuthService(URL)
+        admin = authService.client.Administrator(URL, TOKEN)
+        admin.new_user(USER5, PASSWORD5)
+        self.assertTrue(auth.exists_user(USER5))
+
+    def test_admin_login(self):
+        '''Test admin login'''
+        # Por hacer
+    
+    def test_user_login(self):
+        '''Test user login'''
+        USER7 = 'user7'
+        PASSWORD7 = 'password7'
+        auth = authService.client.AuthService(URL)
+        admin = authService.client.Administrator(URL, TOKEN)
+        admin.new_user(USER7, PASSWORD7)
+        user = auth.user_login(USER7, PASSWORD7)
+        self.assertTrue(user.username == USER7 and user.token != None)
+
