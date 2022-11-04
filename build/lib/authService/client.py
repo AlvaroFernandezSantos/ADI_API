@@ -43,6 +43,7 @@ class Administrator:
         return result.content.decode('utf-8')
 
     def remove_user(self, username):
+        ''' Elimina un usuario'''
         if not isinstance(username, str):
             raise ValueError('Username must be a string')
         result = requests.delete(

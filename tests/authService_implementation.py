@@ -57,3 +57,13 @@ class AuthServiceImplementation(unittest.TestCase):
         auth = authService.auth.Auth(PATH)
         auth.create_user(USER5, PASSWORD5)
         self.assertTrue(auth.exists(USER5))
+
+    def test_wipe(self):
+        '''Test wipe'''
+        USER6 = 'user6'
+        PASSWORD6 = 'password6'
+        auth = authService.auth.Auth(PATH)
+        auth.create_user(USER6, PASSWORD6)
+        self.assertTrue(auth.exists(USER6))
+        auth.wipe()
+        self.assertFalse(auth.exists(USER6))

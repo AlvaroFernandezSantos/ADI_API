@@ -42,8 +42,9 @@ class NonPersistentAuth:
 
     def incrementa_edad(self, token):
         ''' Incrementa la edad de un token '''
-        for user, values in self.users.items():
-            if values == token:
+        current_list = self.users.copy()
+        for user, values in current_list.items():
+            if values["token"] == token:
                 self.users[user]["edad"] += 1
                 if self.users[user]["edad"] > 180:
                     self.delete_token(token)
@@ -54,14 +55,15 @@ class NonPersistentAuth:
 
     def delete_token(self, token):
         ''' Elimina un token '''
-        for user, values in self.users.items():
-            if values.get("token") == token:
+        current_list = self.users.copy()
+        for user, values in current_list.items():
+            if values["token"] == token:
                 self.users.pop(user)
 
 
     def reset_edad(self, token):
         ''' Reinicia la edad de un token '''
         for user, values in self.users.items():
-            if values.get("token") == token:
+            if values["token"] == token:
                 self.users[user]["edad"] = 0
             

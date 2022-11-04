@@ -67,4 +67,8 @@ class Auth:
 
     def wipe(self): # Añadida, arreglar
         '''Elimina todos los usuarios'''
-        self.cursor.execute('DELETE FROM users')
+        db = self.get_db()
+        cursor = db.cursor()
+        cursor.execute('DELETE FROM users')
+        db.commit()
+        db.close()
