@@ -15,7 +15,8 @@ class AuthServiceError(Exception):
 class Administrator:
     ''' Cliente de autenticación como administrador'''
 
-    def __init__(self, token):
+    def __init__(self, url, token):
+        self.url = url
         self.__token = token
         self.__headers = {'Content-Type': 'application/json', 'admin-token': self.__token}
 
@@ -23,11 +24,6 @@ class Administrator:
     def headers(self):
         ''' Retorna los headers del administrador '''
         return self.__headers
-
-    @property
-    def token(self):
-        ''' Retorna el token del administrador'''
-        return self.__token
     
     def new_user(self, username, password):
         ''' Crea un nuevo usuario'''
@@ -35,34 +31,34 @@ class Administrator:
             raise ValueError('Username must be a string')
         if not isinstance(password, str):
             raise ValueError('Password must be a string')
-        req_body = {'user': username, "hash-pass": password}
+
+        req_body = {"hash-pass": password}
         result = requests.put(
-            f'{self.root}v1/user',
+            f'{self.url}v1/user/{username}',
             headers=self.headers,
             data=json.dumps(req_body),
-            timeout=self.timeout)
+            timeout=120)
         if result.status_code != 200:
             raise AuthServiceError(f'Unexpected status code: {result.status_code}')
+        return result.content.decode('utf-8')
 
     def remove_user(self, username):
         if not isinstance(username, str):
             raise ValueError('Username must be a string')
-        req_body = {'username': username}
         result = requests.delete(
-            f'{self.root}v1/user',
+            f'{self.url}v1/user/{username}',
             headers=self.headers,
-            data=json.dumps(req_body),
-            timeout=self.timeout
-        )
-        if result.status_code != 200:
+            timeout=120)
+        if result.status_code != 204:
             raise AuthServiceError(f'Unexpected status code: {result.status_code}')    
 
 
 class User:
     '''  Cliente de autenticación como usuario '''
 
-    def __init__(self, username, token):
-        self.__username = username
+    def __init__(self, url, username, token):
+        self.url = url
+        self.username = username
         self.__token = token
         self.__headers = {'Content-Type': 'application/json', 'user-token': self.__token}
 
@@ -80,14 +76,15 @@ class User:
         ''' Cambia la contraseña del usuario '''
         if not isinstance(new_password, str):
             raise ValueError('Password must be a string')
+
         req_body = {'hash-pass': new_password}
         result = requests.post(
-            f'{self.root}v1/user/{self.username}',
+            f'{self.url}v1/user/{self.username}',
             headers=self.headers,
             data=json.dumps(req_body),
-            timeout=self.timeout)
+            timeout=120)
         if result.status_code != 200:
-            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
+            raise AuthServiceError(f'Unexpected status code: {result.content}')
 
 
 class AuthService:
@@ -101,29 +98,49 @@ class AuthService:
         if not self.root.endswith('/'):
             self.root = f'{self.root}/'
         self.timeout = timeout
-
+        self.headers = {'Content-Type': 'application/json'}
 
     def user_of_token(self, token):
         '''Return username of the given token or error'''
+        if not isinstance(token, str):
+            raise ValueError('Token must be a string')
 
+        result = requests.get(
+            f'{self.root}v1/token/{token}',
+            headers=self.headers,
+            timeout=self.timeout)
+        if result.status_code != 200:
+            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
+        username = json.loads(result.content.decode())["user"]
+        return username # No se si hay que retornar esto
 
     def exists_user(self, username):
         '''Return if given user exists or not'''
         if not isinstance(username, str):
             raise ValueError('Username must be a string')
-        req_body = {'user': username}
-        result = requests.post(
-            f'{self.root}v1/user',
+        result = requests.get(
+            f'{self.root}v1/user/{username}',
             headers=self.headers,
-            data=json.dumps(req_body),
             timeout=self.timeout)
         if result.status_code != 204:
             raise AuthServiceError(f'Unexpected status code: {result.status_code}')
-        return result.content.decode('utf-8') == 'true' # Comprobar esto
+        return True
 
     def administrator_login(self, token):
-        '''Return Adminitrator() object or error'''
-        raise NotImplementedError()
+        '''Return Administrator() object or error'''
+        if not isinstance(token, str):
+            raise ValueError('Token must be a string')
+
+        test_headers = {'Content-Type': 'application/json', 'admin-token': token}
+        
+        result = requests.get(
+            f'{self.root}v1/user/admin',
+            headers=test_headers,
+            timeout=self.timeout)
+        if result.status_code != 204:
+            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
+        return Administrator(self.root, token)
+
 
     def user_login(self, username, password):
         '''Return User() object or error'''
@@ -131,6 +148,7 @@ class AuthService:
             raise ValueError('Username must be a string')
         if not isinstance(password, str):
             raise ValueError('Password must be a string')
+
         hash_pass = hashlib.sha256(password.encode('utf-8')).hexdigest()
         req_body = {'user': username, 'hash-pass': hash_pass}
         result = requests.post(
@@ -140,89 +158,6 @@ class AuthService:
             timeout=self.timeout)
         if result.status_code != 200:
             raise AuthServiceError(f'Unexpected status code: {result.status_code}')
-        # Construir el objeto User
-        return User(username, result.content.decode('utf-8'))
 
-
-
-    
-    def user_login(self, username, password):
-        '''Send request to login'''
-        if not isinstance(username, str):
-            raise ValueError('username must be a string')
-        if not isinstance(password, str):
-            raise ValueError('password must be a string')
-        hash_pass = hashlib.sha256(password.encode('utf-8')).hexdigest()
-        req_body = {'username': username, 'hash-pass': hash_pass}
-        result = requests.post(
-            f'{self.root}v1/login',
-            headers=self.headers,
-            data=json.dumps(req_body),
-            timeout=self.timeout
-        )
-        if result.status_code != 200:
-            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
-        return result.content.decode('utf-8')
-
-    
-    def change_password(self, username, password):
-        '''Send request to change password'''
-        if not isinstance(username, str):
-            raise ValueError('username must be a string')
-        if not isinstance(password, str):
-            raise ValueError('password must be a string')
-        hash_pass = hashlib.sha256(password.encode('utf-8')).hexdigest()
-        req_body = {'username': username, 'hash-pass': hash_pass}
-        result = requests.post(
-            f'{self.root}v1/change-password',
-            headers=self.headers,
-            data=json.dumps(req_body),
-            timeout=self.timeout
-        )
-        if result.status_code != 200:
-            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
-    
-    
-    def check_exists(self , username):
-        '''Send request to check if user exists'''
-        if not isinstance(username, str):
-            raise ValueError('username must be a string')
-        req_body = {'username': username}
-        result = requests.post(
-            f'{self.root}v1/user/{username}',
-            headers=self.headers,
-            data=json.dumps(req_body),
-            timeout=self.timeout
-        )
-        if result.status_code != 204:
-            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
-
-    
-    def check_token(self, token):
-        '''Send request to check if token is valid'''
-        if not isinstance(token, str):
-            raise ValueError('token must be a string')
-        req_body = {'token': token}
-        result = requests.post(
-            f'{self.root}v1/token/{token}',
-            headers=self.headers,
-            data=json.dumps(req_body),
-            timeout=self.timeout
-        )
-        if result.status_code != 200:
-            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
-
-
-    def check_admin(self, admin_token):
-        '''Send request to check if token is valid'''
-        if not isinstance(admin_token, str):
-            raise ValueError('admin_token must be a string')
-        req_body = {'admin-token': admin_token}
-        result = requests.post(
-            f'{self.root}v1/admin/{admin_token}',
-            headers=self.headers,
-            data=json.dumps(req_body),
-            timeout=self.timeout
-        )
-        if result.status_code != 200:
-            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
+        token = json.loads(result.content.decode())["token"]
+        return User(self.root, username, token)

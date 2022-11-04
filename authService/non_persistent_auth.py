@@ -15,33 +15,35 @@ class NonPersistentAuth:
         auth = Auth(f'{getcwd()}/test.db')
 
 
-    def create_token(self, username, password):
+    def create_token(self, username):
         ''' Crea un nuevo token '''
-        if self.auth.exits_user(username, password):
-            token = str(uuid.uuid4())
-            edad = 0
-            self.users[username] = {"token": token, "edad": edad}
-            timer = threading.Timer(5, self.incrementa_edad, [token])
-            timer.start()
-            return token
+        token = str(uuid.uuid4())
+        edad = 0
+        self.users[username] = {"token": token, "edad": edad}
+        timer = threading.Timer(5, self.incrementa_edad, [token])
+        timer.start()
+        return token
 
 
     def is_valid(self, username, token):
         ''' Comprueba si un token es válido '''
-        return self.users[username]["token"] == token
+        try:
+            return self.users[username]["token"] == token
+        except KeyError:
+            return False
 
 
     def get_user(self, token):
         ''' Devuelve el usuario asociado a un token '''
         for user, values in self.users.items():
-             if values.get("token") == token:
+             if values["token"] == token:
                 return user
 
 
     def incrementa_edad(self, token):
         ''' Incrementa la edad de un token '''
         for user, values in self.users.items():
-            if values.get("token") == token:
+            if values == token:
                 self.users[user]["edad"] += 1
                 if self.users[user]["edad"] > 180:
                     self.delete_token(token)
