@@ -4,13 +4,11 @@
     REST access library + client example
 '''
 
-from authService.client import RestAuthClient
+from authService.client import AuthService
 
 def main():
     '''Entry point'''
-    client = RestAuthClient('http://127.0.0.1:4999/')
-    print("Creando usuario 'pepe'")
-    client.create_user('pepe')
+    client = AuthService('http://0.0.0.0:3001/')
 
 if __name__ == '__main__':
     main()

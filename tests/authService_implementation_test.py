@@ -16,7 +16,7 @@ class AuthServiceImplementation(unittest.TestCase):
     def test_create_user(self):
         '''Test create user'''
         auth = authService.auth.Auth(PATH)
-        auth.create_user('user1', 'password')
+        self.assertTrue(auth.create_user('user1', 'password'))
         self.assertTrue(auth.exists('user1'))
 
     def test_delete_user(self):

@@ -27,6 +27,7 @@ class Auth:
         cursor.execute(f'INSERT INTO users VALUES ("{username}", "{password}")')
         db.commit()
         db.close()
+        return True
 
     
     def delete_user(self, username):
@@ -51,21 +52,27 @@ class Auth:
     
     def check_password(self, username, password):
         '''Comprueba la contraseña de un usuario'''
-        cursor = self.get_db().cursor()
+        db = self.get_db()
+        cursor = db.cursor()
         sentence = 'SELECT password FROM users WHERE username=?'
         cursor.execute(sentence, (username,))
-        return cursor.fetchone()[0] == password
+        possible_password = cursor.fetchone()[0]
+        db.close()
+        return possible_password == password
 
 
     def exists(self, username):
         '''Comprueba si un usuario existe'''
+        db = self.get_db()
         sentence = 'SELECT * FROM users WHERE username=?'
-        cursor = self.get_db().cursor()
+        cursor = db.cursor()
         cursor.execute(sentence, (username,))
-        return cursor.fetchone() is not None
+        possible_user = cursor.fetchone()
+        db.close()
+        return possible_user is not None
 
 
-    def wipe(self): # Añadida, arreglar
+    def wipe(self):
         '''Elimina todos los usuarios'''
         db = self.get_db()
         cursor = db.cursor()

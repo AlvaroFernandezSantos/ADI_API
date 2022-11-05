@@ -4,6 +4,7 @@
     Lanzamiento del servidor de autenticación AuthService
 '''
 
+import uuid
 import argparse
 from flask import Flask
 
@@ -14,11 +15,12 @@ from os import getcwd
 
 def main():
     '''Entry point'''
+    token = str(uuid.uuid4())
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-a', '--admin', type=str, default='admin', help='Token de administrador')
+    parser.add_argument('-a', '--admin', type=str, default=token, help='Token de administrador')
     parser.add_argument('-p', '--port', type=int, default=3001, help='Puerto del servidor')
     parser.add_argument('-l', '--listening', type=str, default='0.0.0.0', help='Direccion del servidor')
-    parser.add_argument('-d', '--db', type=str, default=f'{getcwd()}/test.db', help='Ruta a la base de datos')
+    parser.add_argument('-d', '--db', type=str, default=f'{getcwd()}', help='Ruta a la base de datos')
     args = parser.parse_args()
 
     print(args.admin)

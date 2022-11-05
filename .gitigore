@@ -1,6 +1,0 @@
-.vscode
-.venv
-authService.egg-info
-build
-.coverage
-core.*

@@ -18,6 +18,7 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         auth = authService.non_persistent_auth.NonPersistentAuth()
         token = auth.create_token(USERNAME)
         self.assertTrue(token in auth.users[USERNAME].values())
+        auth.delete_token(token)
 
     def test_is_valid(self):
         '''Test is valid'''
@@ -26,6 +27,7 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         token = auth.create_token(USERNAME)
         self.assertTrue(auth.is_valid(USERNAME, token))
         self.assertFalse(auth.is_valid(USERNAME, 'wrong-token'))
+        auth.delete_token(token)
     
     def test_get_user(self):
         '''Test get user'''
@@ -33,6 +35,7 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         auth = authService.non_persistent_auth.NonPersistentAuth()
         token = auth.create_token(USERNAME)
         self.assertEqual(auth.get_user(token), USERNAME)
+        auth.delete_token(token)
     
     def test_incrementa_edad(self):
         '''Test incrementa edad'''
@@ -43,6 +46,7 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         auth.incrementa_edad(token)
         edad_2 = auth.users[USERNAME]["edad"]
         self.assertEqual(edad_1, edad_2-1)
+        auth.delete_token(token)
     
     def test_delete_token(self):
         USERNAME = "prueba4"
@@ -51,6 +55,7 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         self.assertTrue(auth.is_valid(USERNAME, token))
         auth.delete_token(token)
         self.assertFalse(auth.is_valid(USERNAME, token))
+        auth.delete_token(token)
     
     def test_reset_edad(self):
         USERNAME = "prueba5"
@@ -59,3 +64,4 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         auth.reset_edad(token)
         edad = auth.users[USERNAME]["edad"]
         self.assertEqual(edad, 0)
+        auth.delete_token(token)
