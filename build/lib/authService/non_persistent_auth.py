@@ -53,7 +53,6 @@ class NonPersistentAuth:
         for user, values in current_list.items():
             if values["token"] == token:
                 self.users[user]["edad"] += 1
-                print('Aumentado')
                 if self.users[user]["edad"] > 180:
                     self.delete_token(token)
                 else:
@@ -78,4 +77,15 @@ class NonPersistentAuth:
         for user, values in self.users.items():
             if values["token"] == token:
                 self.users[user]["edad"] = 0
+
+
+    def token_exists(self, token):
+        ''' Comprueba si un token existe '''
+        try:
+            for user, values in self.users.items():
+                if values["token"] == token:
+                    return True
+        except KeyError:
+            return False            
+        return False
             

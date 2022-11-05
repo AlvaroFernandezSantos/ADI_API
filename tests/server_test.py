@@ -7,6 +7,12 @@ ADMIN_HEADERS = {'Content-Type': 'application/json', 'admin-token': 'admin'}
 URL = "http://localhost:3001/"
 
 class NonPersistentAuthImplementation(unittest.TestCase):
+
+    def test_creation(self):
+        '''Test instantiation'''
+        result = requests.get(f'{URL}v1/user/admin',headers=ADMIN_HEADERS, timeout=120)
+        self.assertEqual(result.status_code, 204)
+
     def test_login(self):
         correct_content = {'user': 'prueba', 'hash-pass': 'prueba'}
         wrong_content = {'user': 'asdasdas', 'hash-pass': 'asdasdasdads'}
@@ -48,7 +54,7 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         result = requests.put(f'{URL}v1/user/{USER2}',headers=HEADERS, data=json.dumps(no_pass_content), timeout=120)
         self.assertEqual(result.status_code, 401)
         result = requests.put(f'{URL}v1/user/{USER2}',timeout=120)
-        self.assertEqual(result.status_code, 401)
+        self.assertEqual(result.status_code, 400)
         result = requests.delete(f'{URL}v1/user/{USER2}',headers=ADMIN_HEADERS, data=json.dumps(correct_content), timeout=120)
         self.assertEqual(result.status_code, 204)
 
@@ -65,21 +71,18 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         result = requests.post(f'{URL}v1/user/login',headers=HEADERS, data=json.dumps(user_content), timeout=120)
         self.assertEqual(result.status_code, 200)
         new_token = json.loads(result.content.decode())['token']
-        correct_content = {'user-token': new_token}
-        wrong_content = {'user': 'prueba', 'hash-pass': 'prueba1', 'user-token': new_token}
+        new_headers = {'Content-Type': 'application/json', 'user-token': new_token}
 
         # Cambiar contraseña
         result = requests.post(f'{URL}v1/user/{USER3}', timeout=120)
-        self.assertEqual(result.status_code, 401)
+        self.assertEqual(result.status_code, 400)
         result = requests.post(f'{URL}v1/user/{USER3}',headers=HEADERS, data=json.dumps(no_user_content), timeout=120)
+        self.assertEqual(result.status_code, 401)
+        result = requests.post(f'{URL}v1/user/{USER3}',headers=new_headers, data=json.dumps(no_pass_content), timeout=120)
         self.assertEqual(result.status_code, 400)
-        result = requests.post(f'{URL}v1/user/{USER3}',headers=HEADERS, data=json.dumps(no_pass_content), timeout=120)
-        self.assertEqual(result.status_code, 400)
-        result = requests.post(f'{URL}v1/user/{USER3}',headers=HEADERS, data=json.dumps(wrong_content), timeout=120)
-        self.assertEqual(result.status_code, 400)
-        result = requests.post(f'{URL}v1/user/{USER3}',headers=HEADERS, data=json.dumps(correct_content), timeout=120)
+        result = requests.post(f'{URL}v1/user/{USER3}',headers=new_headers, data=json.dumps(user_content), timeout=120)
         self.assertEqual(result.status_code, 200)
-        result = requests.delete(f'{URL}v1/user/{USER3}',headers=ADMIN_HEADERS, data=json.dumps(correct_content), timeout=120)
+        result = requests.delete(f'{URL}v1/user/{USER3}',headers=ADMIN_HEADERS, timeout=120)
         self.assertEqual(result.status_code, 204)
 
     def test_user_exists(self):

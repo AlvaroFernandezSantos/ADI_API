@@ -32,7 +32,8 @@ class Administrator:
         if not isinstance(password, str):
             raise ValueError('Password must be a string')
 
-        req_body = {"hash-pass": password}
+        hash_pass = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        req_body = {"hash-pass": hash_pass}
         result = requests.put(
             f'{self.url}v1/user/{username}',
             headers=self.headers,
@@ -78,7 +79,8 @@ class User:
         if not isinstance(new_password, str):
             raise ValueError('Password must be a string')
 
-        req_body = {'hash-pass': new_password}
+        hash_pass = hashlib.sha256(new_password.encode('utf-8')).hexdigest()
+        req_body = {'hash-pass': hash_pass}
         result = requests.post(
             f'{self.url}v1/user/{self.username}',
             headers=self.headers,

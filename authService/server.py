@@ -60,8 +60,6 @@ def routeApp(app, AUTH, tokens, admin_token):
             return make_response('Missing "hash-pass" key', 400)
 
         password = request.get_json()['hash-pass']
-        if not AUTH.check_password(username, password):
-            return make_response('Invalid password', 400)
 
         AUTH.set_password(username, password)
         response = {"user": username}
@@ -85,6 +83,7 @@ def routeApp(app, AUTH, tokens, admin_token):
         if not AUTH.exists(username):
             return make_response("User not found", 404)
 
+        tokens.users.pop(username)
         AUTH.delete_user(username)
         return make_response("", 204)
 

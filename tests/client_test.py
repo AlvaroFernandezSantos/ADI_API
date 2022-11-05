@@ -3,6 +3,7 @@
 import unittest
 import authService.client
 import authService.auth
+import hashlib
 
 URL = "http://localhost:3001/"
 TOKEN = "admin"
@@ -22,6 +23,8 @@ class AdminImplementation(unittest.TestCase):
         admin.new_user('user1', 'password')
         auth = authService.auth.Auth(PATH)
         self.assertTrue(auth.exists('user1'))
+        admin.remove_user('user1')
+        self.assertFalse(auth.exists('user1'))
     
     def test_remove_user(self):
         '''Test remove user'''
@@ -47,8 +50,11 @@ class AuthServiceClientImplementation(unittest.TestCase):
         admin = authService.client.Administrator(URL, TOKEN)
         admin.new_user(USERNAME, "password")
         auth = authService.client.AuthService(URL)
+        self.assertTrue(auth.exists_user(USERNAME))
         user_result = auth.user_login(USERNAME, "password")
         self.assertEqual(user_result.username, USERNAME)
+        admin.remove_user(USERNAME)
+        self.assertRaises(authService.client.AuthServiceError, auth.exists_user, USERNAME)
 
 
     def test_user_of_token(self):
@@ -64,6 +70,11 @@ class AuthServiceClientImplementation(unittest.TestCase):
 
         # Contrastar token
         self.assertEqual(auth.user_of_token(user_result.token), user_result.username)
+
+        # Borrar usuario
+        admin.remove_user(USERNAME)
+        self.assertRaises(authService.client.AuthServiceError, auth.exists_user, USERNAME)
+
 
 class UserImplementation(unittest.TestCase):
 
@@ -88,7 +99,13 @@ class UserImplementation(unittest.TestCase):
 
         # Cambiar contraseña
         new_user.set_new_password('password')
-        self.assertTrue(auth.check_password(USER3, 'password'))
+        hash_pass = hashlib.sha256('password'.encode('utf-8')).hexdigest()
+        self.assertTrue(auth.check_password(USER3, hash_pass))
+
+        # Borrar usuario
+        admin.remove_user(USER3)
+        self.assertFalse(auth.exists(USER3))
+
 
 class AuthServiceImplementation(unittest.TestCase):
 
@@ -105,6 +122,9 @@ class AuthServiceImplementation(unittest.TestCase):
         admin = authService.client.Administrator(URL, TOKEN)
         admin.new_user(USER5, PASSWORD5)
         self.assertTrue(auth.exists_user(USER5))
+        admin.remove_user(USER5)
+        self.assertRaises(authService.client.AuthServiceError, auth.exists_user, USER5)
+
 
     def test_admin_login(self):
         '''Test admin login'''
@@ -123,6 +143,8 @@ class AuthServiceImplementation(unittest.TestCase):
         admin = authService.client.Administrator(URL, TOKEN)
         admin.new_user(USER7, PASSWORD7)
         user = auth.user_login(USER7, PASSWORD7)
-        print(user.token)
         self.assertTrue(user.username == USER7 and user.token != "default")
+        admin.remove_user(USER7)
+        self.assertRaises(authService.client.AuthServiceError, auth.exists_user, USER7)
+
 
