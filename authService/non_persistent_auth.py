@@ -77,4 +77,15 @@ class NonPersistentAuth:
         for user, values in self.users.items():
             if values["token"] == token:
                 self.users[user]["edad"] = 0
+
+
+    def token_exists(self, token):
+        ''' Comprueba si un token existe '''
+        try:
+            for user, values in self.users.items():
+                if values["token"] == token:
+                    return True
+        except KeyError:
+            return False            
+        return False
             
