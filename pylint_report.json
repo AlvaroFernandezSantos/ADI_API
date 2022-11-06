@@ -1,0 +1,54 @@
+[
+    {
+        "type": "convention",
+        "module": "authService",
+        "obj": "",
+        "line": 1,
+        "column": 0,
+        "endLine": null,
+        "endColumn": null,
+        "path": "authService/__init__.py",
+        "symbol": "invalid-name",
+        "message": "Module name \"authService\" doesn't conform to snake_case naming style",
+        "message-id": "C0103"
+    },
+    {
+        "type": "convention",
+        "module": "authService_scripts",
+        "obj": "",
+        "line": 1,
+        "column": 0,
+        "endLine": null,
+        "endColumn": null,
+        "path": "authService_scripts/__init__.py",
+        "symbol": "invalid-name",
+        "message": "Module name \"authService_scripts\" doesn't conform to snake_case naming style",
+        "message-id": "C0103"
+    },
+    {
+        "type": "convention",
+        "module": "authService_scripts.server",
+        "obj": "",
+        "line": 20,
+        "column": 0,
+        "endLine": null,
+        "endColumn": null,
+        "path": "authService_scripts/server.py",
+        "symbol": "line-too-long",
+        "message": "Line too long (104/100)",
+        "message-id": "C0301"
+    },
+    {
+        "type": "convention",
+        "module": "authService_scripts.server",
+        "obj": "",
+        "line": 21,
+        "column": 0,
+        "endLine": null,
+        "endColumn": null,
+        "path": "authService_scripts/server.py",
+        "symbol": "line-too-long",
+        "message": "Line too long (102/100)",
+        "message-id": "C0301"
+    }
+]

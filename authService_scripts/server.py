@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 
-'''
-    Lanzamiento del servidor de autenticación AuthService
-'''
+''' Lanzamiento del servidor de autenticación AuthService '''
 
 import uuid
 import argparse
-from flask import Flask
 
+from os import getcwd
+from flask import Flask
 from authService.server import routeApp
 from authService.auth import Auth
 from authService.non_persistent_auth import NonPersistentAuth
-from os import getcwd
 
 def main():
     '''Entry point'''
@@ -23,13 +21,13 @@ def main():
     parser.add_argument('-d', '--db', type=str, default=f'{getcwd()}', help='Ruta a la base de datos')
     args = parser.parse_args()
 
-    print(args.admin)
+    print(f'Admin token: {args.admin}')
 
     np_auth = NonPersistentAuth()
 
     app = Flask("authService")
     routeApp(app, Auth(args.db), np_auth, args.admin)
-    app.run(host=args.listening, port=args.port, debug=True)
+    app.run(host=args.listening, port=args.port, debug=False)
 
 
 if __name__ == '__main__':

@@ -65,3 +65,12 @@ class NonPersistentAuthImplementation(unittest.TestCase):
         edad = auth.users[USERNAME]["edad"]
         self.assertEqual(edad, 0)
         auth.delete_token(token)
+
+    def test_token_exists(self):
+        USERNAME = 'prueba6'
+        wrong_token = 'abcd'
+        auth = authService.non_persistent_auth.NonPersistentAuth()
+        right_token = auth.create_token(USERNAME)
+        self.assertTrue(auth.token_exists(right_token))
+        self.assertFalse(auth.token_exists(wrong_token))
+        auth.delete_token(right_token)

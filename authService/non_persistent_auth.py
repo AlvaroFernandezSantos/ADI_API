@@ -1,11 +1,9 @@
+#!/usr/bin/env python3
+
+''' Implementación de la clase de datos no persistentes de autenticación '''
+
 import uuid
 import threading
-from authService.auth import Auth
-from os import getcwd
-
-'''
-Implementación de la clase de datos no persistentes de autenticación
-'''
 
 class NonPersistentAuth:
     ''' Implementa todas las operaciones sobre un objeto tipo NonPersistentAuth() '''
@@ -13,7 +11,6 @@ class NonPersistentAuth:
     def __init__(self):
         self.users = {} # {username: {token:token, edad:edad}}
         self.timers = {} # {token:timer}
-        auth = Auth(f'{getcwd()}/test.db')
 
     def __del__(self):
         ''' Destructor '''
@@ -43,8 +40,9 @@ class NonPersistentAuth:
     def get_user(self, token):
         ''' Devuelve el usuario asociado a un token '''
         for user, values in self.users.items():
-             if values["token"] == token:
+            if values["token"] == token:
                 return user
+        return None
 
 
     def incrementa_edad(self, token):
@@ -74,18 +72,16 @@ class NonPersistentAuth:
 
     def reset_edad(self, token):
         ''' Reinicia la edad de un token '''
-        for user, values in self.users.items():
+        for _, values in self.users.items():
             if values["token"] == token:
-                self.users[user]["edad"] = 0
+                values["edad"] = 0
 
 
     def token_exists(self, token):
         ''' Comprueba si un token existe '''
-        try:
-            for user, values in self.users.items():
-                if values["token"] == token:
-                    return True
-        except KeyError:
-            return False            
+
+        for _, values in self.users.items():
+            if values["token"] == token:
+                return True
         return False
             

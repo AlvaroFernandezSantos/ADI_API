@@ -1,11 +1,15 @@
-import hashlib 
+#!/usr/bin/env python3
+
+''' Implementación del cliente para el servicio de autenticación'''
+
+import hashlib
 import json
 import requests
 
 class AuthServiceError(Exception):
     '''Exception raised for errors in the AuthService client'''
 
-    def __init__(self, message):
+    def __init__(self, message): #pylint: disable=super-init-not-called
         self.message = message
 
     def __str__(self):
@@ -24,7 +28,7 @@ class Administrator:
     def headers(self):
         ''' Retorna los headers del administrador '''
         return self.__headers
-    
+
     def new_user(self, username, password):
         ''' Crea un nuevo usuario'''
         if not isinstance(username, str):
@@ -52,7 +56,7 @@ class Administrator:
             headers=self.headers,
             timeout=120)
         if result.status_code != 204:
-            raise AuthServiceError(f'Unexpected status code: {result.status_code}')    
+            raise AuthServiceError(f'Unexpected status code: {result.status_code}')
 
 
 class User:
@@ -68,7 +72,7 @@ class User:
     def headers(self):
         ''' Retorna los headers del usuario '''
         return self.__headers
-    
+
     @property
     def token(self):
         ''' Retorna el token del usuario '''
@@ -135,7 +139,7 @@ class AuthService:
             raise ValueError('Token must be a string')
 
         test_headers = {'Content-Type': 'application/json', 'admin-token': token}
-        
+
         result = requests.get(
             f'{self.root}v1/user/admin',
             headers=test_headers,
