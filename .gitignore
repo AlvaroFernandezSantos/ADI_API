@@ -1,0 +1,14 @@
+.vscode
+.venv
+authService.egg-info
+build
+.coverage
+core.*
+.tox
+bandit_*
+coverage_*
+safety_*
+.pytest_cache
+pylint_report.json
+safety_report.json
+tests/__pycache__
