@@ -1,35 +1,25 @@
-# Ejemplo de API REST
+# Trabajo teoricopráctico 1 - API REST
 
-Demostración para **Python 3** de API REST creando un servidor con Flask y un cliente con requests.
+## Miembros del equipo
+Trabajo realizado por:
+- Álvaro Fernandez Santos
+- Daniel Almansa Rodríguez
 
-Crear un entorno virtual y activarlo:
-```shell
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Instalar las dependencias:
+## Requisitos
+Existe un archivo _requirements.txt_ para facilitar la instalación:
 ```shell
 pip install -r requeriments.txt
 ```
 
-Podemos lanzar la *test suite* utilizando *Tox*:
+## Ejecución
+Para el servidor, instalar el paquete y ejecutar:
+```shell
+authService_server -a <admin_token> -p <port> -l <ip_listening> -d <database_path>
+```
+
+## Tests
+Se puede ejectuar la batería de tests desde la carpeta raíz:
 ```shell
 pip install tox
 tox
-```
-
-Se puede lanzar en un terminal el servidor:
-```shell
-python3 -m restlist_scripts.server
-```
-
-Y en otro el cliente (que ejecuta código de prueba):
-```shell
-python3 -m restlist_scripts.client
-```
-También se puede ejecutar añadiendo el directorio ".venv/bin" al PATH del sistema y ejecutando:
-```shell
-restlist_server
-restlist_client
 ```
