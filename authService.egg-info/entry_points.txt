@@ -1,4 +1,0 @@
-[console_scripts]
-authService_client = authService_scripts.client:main
-authService_server = authService_scripts.server:main
-

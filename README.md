@@ -1,24 +1,24 @@
 # Trabajo teoricopráctico 1 - API REST
 
-Demostración para **Python 3** de API REST creando un servidor de autenticación con Flask y un cliente con requests.
+## Miembros del equipo
+Trabajo realizado por:
+- Álvaro Fernandez Santos
+- Daniel Almansa Rodríguez
 
-Crear un entorno virtual y activarlo:
-```shell
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Instalar las dependencias:
+## Requisitos
+Existe un archivo _requirements.txt_ para facilitar la instalación:
 ```shell
 pip install -r requeriments.txt
 ```
 
-Se puede lanzar en un terminal el servidor:
+## Ejecución
+Para el servidor, instalar el paquete y ejecutar:
 ```shell
-python3 authService_scripts/server.py
+authService_server -a <admin_token> -p <port> -l <ip_listening> -d <database_path>
 ```
 
-Podemos lanzar la *test suite* utilizando *Tox*:
+## Tests
+Se puede ejectuar la batería de tests desde la carpeta raíz:
 ```shell
 pip install tox
 tox

@@ -6,7 +6,7 @@ HEADERS = {'Content-Type': 'application/json'}
 ADMIN_HEADERS = {'Content-Type': 'application/json', 'admin-token': 'admin'}
 URL = "http://localhost:3001/"
 
-class NonPersistentAuthImplementation(unittest.TestCase):
+class AuthServerImplementation(unittest.TestCase):
 
     def test_creation(self):
         '''Test instantiation'''
