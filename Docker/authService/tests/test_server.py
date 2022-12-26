@@ -4,7 +4,7 @@ import json
 
 HEADERS = {'Content-Type': 'application/json'}
 ADMIN_HEADERS = {'Content-Type': 'application/json', 'admin-token': 'admin'}
-URL = "http://localhost:3001/"
+URL = "http://172.17.0.2:3001/"
 
 class AuthServerImplementation(unittest.TestCase):
 
